@@ -1,24 +1,27 @@
 package org.example.utils;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.example.models.Priority;
+import org.example.models.Todo;
+import org.junit.Test;
 
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-class ConversionTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+
+public class ConversionTest {
 
     @Test
     public void test_validDayMonth() {
-        LocalDateTime convertedDate = Conversion.validDate("1/12");
-        Assertions.assertEquals(Month.DECEMBER, convertedDate.getMonth());
-        Assertions.assertEquals(1, convertedDate.getDayOfMonth());
+        LocalDateTime convertedDate = Conversion.validDate("12/1");
+        assertEquals(Month.DECEMBER, convertedDate.getMonth());
+        assertEquals(1, convertedDate.getDayOfMonth());
     }
 
     @Test
     public void test_invalidPattern() {
-        Assertions.assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> Conversion.validDate("1-1")
         );
@@ -26,9 +29,17 @@ class ConversionTest {
 
     @Test
     public void test_invalidDayMonth() {
-        Assertions.assertThrows(
+        assertThrows(
                 RuntimeException.class,
-                () -> Conversion.validDate("1/13")
+                () -> Conversion.validDate("13/25")
         );
+    }
+
+    @Test
+    public void test_validTdodoSplitWithoutComma() {
+        var expected = new Todo("test",
+                LocalDateTime.of(2023, Month.of(3), 3, 0, 0),
+                Priority.HIGH);
+        assertEquals(expected, Conversion.parseString("test, 3/3, HIGH"));
     }
 }
