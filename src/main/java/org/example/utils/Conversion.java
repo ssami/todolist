@@ -14,7 +14,7 @@ public class Conversion {
     private static final String TODO_DELIMITER = ",";
     private static final Pattern p = Pattern.compile("(\\d{1,2})/(\\d{1,2})");
 
-    public static LocalDateTime validDate(String dueBy) {
+    public static LocalDateTime parseDate(String dueBy) {
 
         Matcher m = p.matcher(dueBy);
         if (m.matches()) {
@@ -33,11 +33,11 @@ public class Conversion {
         }
         var parts = inLine.split(TODO_DELIMITER);
         var todoStr = parts[0].trim();
-        var dateObj = parts.length > 1 ? Conversion.validDate(parts[1].trim()) : LocalDateTime.now();
+        var dateObj = parts.length > 1 ? Conversion.parseDate(parts[1].trim()) : LocalDateTime.now();
         var priority = Priority.LOW;
         if (parts.length > 2) {
             try {
-                priority = Priority.valueOf(parts[2].trim());
+                priority = Priority.valueOf(parts[2].toUpperCase().trim());
             } catch (IllegalArgumentException e) {
                 System.out.println("No such priority");
             }

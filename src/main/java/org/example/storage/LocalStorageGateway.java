@@ -8,12 +8,12 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class StorageGateway implements StorageInterface<Todo> {
+public class LocalStorageGateway implements StorageInterface<Todo> {
 
     // should be a strategy thing that can be defined during startup
     Set<Todo> localTodoCache;
 
-    public StorageGateway() {
+    public LocalStorageGateway() {
         localTodoCache = new HashSet<>();
     }
 

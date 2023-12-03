@@ -1,5 +1,5 @@
 What do you want to do?
-1. Create a new todo
+1. Create a new todo in the format <todo string>, <date due in mm/dd>{optional}, <priority in format HIGH, MEDIUM, LOW>{optional}
 2. List todos for today
 3. List this menu again
 4. Exit

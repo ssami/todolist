@@ -5,7 +5,9 @@ import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import org.example.models.Todo;
-import org.example.storage.StorageGateway;
+import org.example.storage.DiskStorageGateway;
+import org.example.storage.LocalStorageGateway;
+import org.example.storage.StorageInterface;
 import org.example.utils.Conversion;
 
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.function.Predicate;
@@ -37,7 +40,7 @@ public class Main {
         Main m = new Main();
         String menu = m.loadMenu();
 
-        StorageGateway gateway = new StorageGateway();
+        LocalStorageGateway gateway = new LocalStorageGateway();
 
         var scanner = new Scanner(System.in);
         var input = "";
@@ -73,24 +76,32 @@ public class Main {
                         .description("Command line interface to todo list builder");
         parser.addArgument("--int")
                 .action(Arguments.storeTrue());
-        parser.addArgument("n")
+        parser.addArgument("--todo")
                 .help("Creates a new todo. Format: <string>, <date in dd/mm format (optional)>, <priority (optional)>")
                 .dest("todo");
+        parser.addArgument("--show")
+                .help("Show todos due today")
+                .action(Arguments.storeTrue());
+
+        StorageInterface<Todo> diskStorage = new DiskStorageGateway("/tmp/todos.txt");
+        TodoEngine todoEngine = new TodoEngine(diskStorage);
         try {
             var results = parser.parseArgs(args);
             if (results.get("int")) {
                 Main.runInteractive();
             }
-            else {
-                var todo = Conversion.parseString(results.get("todo"));
-                System.out.println("Created todo called: " + todo.thingToDo());
+            else if (null != results.get("todo")) {
+                String rawTodo = results.get("todo");
+                todoEngine.store(rawTodo);
+            }
+            else if (results.get("show")) {
+                List<Todo> dueToday = todoEngine.retrieveTodayList();
+                System.out.println(dueToday);
             }
         } catch (ArgumentParserException e) {
             throw new RuntimeException(e);
+        } finally {
+            todoEngine.save();  // writes out to disk
         }
-
-
-
-
     }
 }

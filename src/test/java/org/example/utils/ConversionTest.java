@@ -14,7 +14,7 @@ public class ConversionTest {
 
     @Test
     public void test_validDayMonth() {
-        LocalDateTime convertedDate = Conversion.validDate("12/1");
+        LocalDateTime convertedDate = Conversion.parseDate("12/1");
         assertEquals(Month.DECEMBER, convertedDate.getMonth());
         assertEquals(1, convertedDate.getDayOfMonth());
     }
@@ -23,7 +23,7 @@ public class ConversionTest {
     public void test_invalidPattern() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> Conversion.validDate("1-1")
+                () -> Conversion.parseDate("1-1")
         );
     }
 
@@ -31,7 +31,7 @@ public class ConversionTest {
     public void test_invalidDayMonth() {
         assertThrows(
                 RuntimeException.class,
-                () -> Conversion.validDate("13/25")
+                () -> Conversion.parseDate("13/25")
         );
     }
 
