@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 
 public class TodoTest {
-
     @Test
     public void testEquality() {
         // how does record equality work? https://tinyurl.com/5n864xxe

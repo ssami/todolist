@@ -12,6 +12,8 @@ public record Todo(String thingToDo, LocalDateTime dueBy, Priority priority) {
 
     @Override
     public String toString() {
-        return thingToDo + ": " + dueBy.toString() + ": " + priority.toString();
+        return this.thingToDo + "," +
+                this.dueBy.getDayOfMonth() + "/" + this.dueBy.getMonthValue() + "," +
+                this.priority.toString();
     }
 }

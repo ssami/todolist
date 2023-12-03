@@ -15,8 +15,8 @@ public class ConversionTest {
     @Test
     public void test_validDayMonth() {
         LocalDateTime convertedDate = Conversion.parseDate("12/1");
-        assertEquals(Month.DECEMBER, convertedDate.getMonth());
-        assertEquals(1, convertedDate.getDayOfMonth());
+        assertEquals(Month.JANUARY, convertedDate.getMonth());
+        assertEquals(12, convertedDate.getDayOfMonth());
     }
 
     @Test

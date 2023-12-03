@@ -5,9 +5,12 @@ import org.example.utils.Conversion;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,19 +43,22 @@ public class DiskStorageGateway implements StorageInterface<Todo> {
 
     @Override
     public List<Todo> retrieve(Predicate<Todo> strategy) {
-        return null;
+        return loadedToDoList.stream()
+                .filter(strategy)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void save() throws URISyntaxException, IOException {
         Path desiredFile = Paths.get(originalFile);
         loadedToDoList.forEach(t -> {
-                        try {
-                            Files.write(desiredFile, t.toString().getBytes(), StandardOpenOption.APPEND);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+            try {
+                var toWrite = (t.toString() + "\n").getBytes();
+                Files.write(desiredFile, toWrite, StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
     }
 }

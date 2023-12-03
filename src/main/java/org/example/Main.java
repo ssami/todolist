@@ -54,8 +54,8 @@ public class Main {
                     System.out.println("Done");
                 }
                 case "2" -> {
-                    LocalDateTime today = LocalDateTime.now();
                     Predicate<Todo> findDueToday = t -> {
+                        LocalDateTime today = LocalDateTime.now();
                         LocalDateTime todoDue = t.dueBy();
                         return todoDue.getMonth().equals(today.getMonth())
                                 && todoDue.getDayOfMonth() == today.getDayOfMonth();
