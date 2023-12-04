@@ -95,8 +95,11 @@ public class Main {
                 todoEngine.store(rawTodo);
             }
             else if (results.get("show")) {
+                // TODO: implement for show for specific date
                 List<Todo> dueToday = todoEngine.retrieveTodayList();
-                System.out.println(dueToday);
+                for (int i=0; i<dueToday.size(); i++) {
+                    System.out.printf("%d: %s%n", i, dueToday.get(i).thingToDo());
+                }
             }
         } catch (ArgumentParserException e) {
             throw new RuntimeException(e);
