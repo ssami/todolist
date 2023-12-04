@@ -54,7 +54,7 @@ public class DiskStorageGateway implements StorageInterface<Todo> {
         loadedToDoList.forEach(t -> {
             try {
                 var toWrite = (t.toString() + "\n").getBytes();
-                Files.write(desiredFile, toWrite, StandardOpenOption.APPEND);
+                Files.write(desiredFile, toWrite, StandardOpenOption.WRITE);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
