@@ -82,6 +82,9 @@ public class Main {
         parser.addArgument("--show")
                 .help("Show todos due today")
                 .action(Arguments.storeTrue());
+        parser.addArgument("--delete")
+                .help("Delete the index of the todo")
+                .dest("delete");
 
         StorageInterface<Todo> diskStorage = new DiskStorageGateway("/tmp/todos.txt");
         TodoEngine todoEngine = new TodoEngine(diskStorage);
@@ -96,9 +99,17 @@ public class Main {
             }
             else if (results.get("show")) {
                 // TODO: implement for show for specific date
-                List<Todo> dueToday = todoEngine.retrieveTodayList();
+                List<Todo> dueToday = todoEngine.retrieveUndoneList();
                 for (int i=0; i<dueToday.size(); i++) {
                     System.out.printf("%d: %s%n", i, dueToday.get(i).thingToDo());
+                }
+            }
+            else if (null != results.get("delete")) {
+                int toDel = Integer.parseInt(results.get("delete"));
+                todoEngine.remove(toDel);
+                List<Todo> remaining = todoEngine.retrieveUndoneList();
+                for (int i=0; i<remaining.size(); i++) {
+                    System.out.printf("%d: %s%n", i, remaining.get(i).thingToDo());
                 }
             }
         } catch (ArgumentParserException e) {

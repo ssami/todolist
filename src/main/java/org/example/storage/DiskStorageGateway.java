@@ -16,26 +16,34 @@ public class DiskStorageGateway implements StorageInterface<Todo> {
     private final List<Todo> loadedToDoList;
     private final String originalFile;
     public DiskStorageGateway(String filePath) throws URISyntaxException, IOException {
-        originalFile = filePath;
+        this.originalFile = filePath;
         Path desiredFile = Paths.get(originalFile);
         if (!Files.exists(desiredFile)) {
             // file doesn't exist, create
             // assumes this program has permissions
             Files.createFile(desiredFile);
-            loadedToDoList = new ArrayList<>();
+            this.loadedToDoList = new ArrayList<>();
         } else {
             Stream<String> lines = Files.lines(desiredFile);
             List<String> todosList = lines.toList();
-            loadedToDoList = todosList.stream()
+            this.loadedToDoList = todosList.stream()
                     .map(Conversion::parseString)
                     .collect(Collectors.toList());
             lines.close();
         }
-
     }
     @Override
     public void store(Todo thingToStore) {
         this.loadedToDoList.add(thingToStore);
+    }
+
+    @Override
+    public void remove(int index) {
+        if (index >= 0 && index < this.loadedToDoList.size()){
+            this.loadedToDoList.remove(index);
+        } else {
+          throw new IllegalArgumentException("Index of item to be removed is out of the range of todo items");
+        }
     }
 
     @Override
@@ -53,6 +61,6 @@ public class DiskStorageGateway implements StorageInterface<Todo> {
             var toWrite = t.toString() + "\n";
             buffer.append(toWrite);
         });
-        Files.writeString(desiredFile, buffer.toString(), StandardOpenOption.WRITE);
+        Files.writeString(desiredFile, buffer.toString());
     }
 }

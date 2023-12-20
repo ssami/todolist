@@ -9,6 +9,7 @@ public interface StorageInterface<T> {
 
     void store(T thingToStore);
     List<T> retrieve(Predicate<T> strategy);
+    void remove(int index);
     void save() throws URISyntaxException, IOException;
 
 }

@@ -22,6 +22,10 @@ public class TodoEngine {
         this.todoStorageGateway.store(todo);
     }
 
+    public List<Todo> retrieveUndoneList() {
+        // TODO: allow seeing "completed" items by including that as a field in Todo
+        return this.todoStorageGateway.retrieve(t -> true);
+    }
     public List<Todo> retrieveTodayList() {
         LocalDateTime today = LocalDateTime.now();
         Predicate<Todo> findDueToday = t -> {
@@ -30,6 +34,10 @@ public class TodoEngine {
                     && todoDue.getDayOfMonth() == today.getDayOfMonth();
         };
         return this.todoStorageGateway.retrieve(findDueToday);
+    }
+
+    public void remove(int index) {
+        this.todoStorageGateway.remove(index);
     }
 
     public List<Todo> retrieveByDate(String dateTime){
