@@ -12,13 +12,25 @@ import java.util.function.Predicate;
 
 public class TodoEngine {
 
-    private final StorageInterface<Todo> todoStorageGateway;
+    private StorageInterface<Todo> todoStorageGateway;
+
+    public TodoEngine() {
+        this.todoStorageGateway = null;
+    }
+
     public TodoEngine(StorageInterface<Todo> storageGateway) {
+        this.todoStorageGateway = storageGateway;
+    }
+
+    public void setTodoStorageGateway(StorageInterface<Todo> storageGateway) {
         this.todoStorageGateway = storageGateway;
     }
 
     public void store(String rawInput) {
         var todo = Conversion.parseString(rawInput);
+        if (null == this.todoStorageGateway) {
+            throw new IllegalStateException("No storage location listed");
+        }
         this.todoStorageGateway.store(todo);
     }
 

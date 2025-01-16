@@ -18,6 +18,7 @@
     <exec.mainClass>org.example.Main</exec.mainClass>
   </properties>
 
+
   <dependencies>
     <dependency>
       <groupId>net.sourceforge.argparse4j</groupId>

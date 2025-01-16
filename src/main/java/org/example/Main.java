@@ -25,15 +25,22 @@ import java.util.stream.Stream;
 
 public class Main {
     private String loadMenu() throws URISyntaxException, IOException {
-        Path path = Paths.get(
-                Objects.requireNonNull(
-                        getClass().getClassLoader().getResource("menu.txt"))
-                        .toURI());
-        Stream<String> lines = Files.lines(path);
-        String menu = lines.collect(Collectors.joining("\n"));
-        lines.close();
+//        Path path = Paths.get(
+//                Objects.requireNonNull(
+//                        getClass().getClassLoader()
+//                                .getResource("menu.txt"))
+//                        .toURI());
+//        Stream<String> lines = Files.lines(path);
+//        String menu = lines.collect(Collectors.joining("\n"));
+//        lines.close();
 
-        return menu;
+        // TODO: for some reason, retrieving menu.txt from src/main/resources is not working anymore in the JAR file
+
+        return "What do you want to do?\n" +
+                "1. Create a new todo in the format <todo string>, <date due in mm/dd>{optional}, <priority in format HIGH, MEDIUM, LOW>{optional}\n" +
+                "2. List todos for today\n" +
+                "3. List this menu again\n" +
+                "4. Exit";
     }
 
     public static void runInteractive() throws URISyntaxException, IOException {
@@ -85,11 +92,22 @@ public class Main {
         parser.addArgument("--delete")
                 .help("Delete the index of the todo")
                 .dest("delete");
+        parser.addArgument("--loc")
+                .help("Location for storing the todos")
+                .dest("loc");
 
-        StorageInterface<Todo> diskStorage = new DiskStorageGateway("/tmp/todos.txt");
-        TodoEngine todoEngine = new TodoEngine(diskStorage);
+        TodoEngine todoEngine = new TodoEngine();
+        String defaultLocation = "/tmp/todos.txt";
+        StorageInterface<Todo> defaultDiskStorage = new DiskStorageGateway(defaultLocation);
+        todoEngine.setTodoStorageGateway(defaultDiskStorage);
         try {
             var results = parser.parseArgs(args);
+            String location = "";
+            if (null != results.get("loc")) {
+                location = results.get("loc");
+                StorageInterface<Todo> diskStorage = new DiskStorageGateway(location);
+                todoEngine.setTodoStorageGateway(diskStorage);
+            }
             if (results.get("int")) {
                 Main.runInteractive();
             }
