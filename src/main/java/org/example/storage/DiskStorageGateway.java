@@ -15,21 +15,26 @@ import java.util.stream.Stream;
 public class DiskStorageGateway implements StorageInterface<Todo> {
     private final List<Todo> loadedToDoList;
     private final String originalFile;
-    public DiskStorageGateway(String filePath) throws URISyntaxException, IOException {
+    public DiskStorageGateway(String filePath) throws IOException {
         this.originalFile = filePath;
         Path desiredFile = Paths.get(originalFile);
-        if (!Files.exists(desiredFile)) {
-            // file doesn't exist, create
-            // assumes this program has permissions
-            Files.createFile(desiredFile);
-            this.loadedToDoList = new ArrayList<>();
-        } else {
-            Stream<String> lines = Files.lines(desiredFile);
-            List<String> todosList = lines.toList();
-            this.loadedToDoList = todosList.stream()
-                    .map(Conversion::parseString)
-                    .collect(Collectors.toList());
-            lines.close();
+        try {
+            if (!Files.exists(desiredFile)) {
+                // file doesn't exist, create
+                // assumes this program has permissions
+                Files.createFile(desiredFile);
+                this.loadedToDoList = new ArrayList<>();
+            } else {
+                Stream<String> lines = Files.lines(desiredFile);
+                List<String> todosList = lines.toList();
+                this.loadedToDoList = todosList.stream()
+                        .map(Conversion::parseString)
+                        .collect(Collectors.toList());
+                lines.close();
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+            throw e;
         }
     }
     @Override
