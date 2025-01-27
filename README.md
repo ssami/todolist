@@ -1,3 +1,7 @@
+# Why? 
+
+I got tired of opening up Notes or Evernote or Doc, navigating to my todo list and making changes. Something on the command line can be easily done with keyboard shortcuts, which I prefer while I'm navigating around my code base.  
+
 # Usage
 
 Single command, non-interactive:
@@ -13,3 +17,20 @@ Interactive, for testing:
 java -jar TodoList-1.0-SNAPSHOT.jar --int --loc 
 ```
 Stores into `/tmp/todos.txt`
+
+Similarly, to show incomplete todos: 
+```shell
+java -jar TodoList-1.0-SNAPSHOT.jar --loc "/Users/sumitasami/todos.txt" --show
+```
+
+And delete: 
+
+```shell
+java -jar TodoList-1.0-SNAPSHOT.jar --loc "/Users/sumitasami/todos.txt" --delete <index of todo to be deleted> 
+```
+
+To use, I create shortcuts for these commands in my ZSH profile, e.g. 
+```shell
+alias todo=/Users/me/scripts/todo.sh 
+```
+where the .sh script is just one of those commands above that takes in user input $1. 
