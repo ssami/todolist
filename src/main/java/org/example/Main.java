@@ -147,9 +147,7 @@ public class Main {
                 int toDel = Integer.parseInt(results.get("delete"));
                 todoEngine.remove(toDel);
                 List<Todo> remaining = todoEngine.retrieveUndoneList();
-                for (int i=0; i<remaining.size(); i++) {
-                    System.out.printf("%d: %s%n", i, remaining.get(i).thingToDo());
-                }
+                printTodos(remaining);
             }
         } catch (ArgumentParserException e) {
             throw new RuntimeException(e);
