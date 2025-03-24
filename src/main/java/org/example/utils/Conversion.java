@@ -18,8 +18,8 @@ public class Conversion {
 
         Matcher m = p.matcher(dueBy);
         if (m.matches()) {
-            int day = Integer.parseInt(m.group(1));
-            int month = Integer.parseInt(m.group(2));
+            int month = Integer.parseInt(m.group(1));
+            int day = Integer.parseInt(m.group(2));
             return LocalDateTime.of(2023, Month.of(month), day, 0, 0);
         }
         else {
@@ -42,6 +42,6 @@ public class Conversion {
                 System.out.println("No such priority");
             }
         }
-        return new Todo(todoStr , dateObj, priority);
+        return new Todo(todoStr, dateObj, priority);
     }
 }

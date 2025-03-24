@@ -36,6 +36,24 @@ public class TodoEngineTest {
     }
 
     @Test
+    public void test_high_pri_local(){
+        LocalStorageGateway localStorageGateway = new LocalStorageGateway();
+        TodoEngine testEngine = new TodoEngine(localStorageGateway);
+
+        // test storage and retrieval
+        testEngine.store("this is a high priority todo0, 3/23, HIGH");
+        List<Todo> high = testEngine.retrieveTopPriorityList();
+        Assert.assertEquals(1, high.size());
+        Assert.assertEquals("this is a high priority todo0", high.get(0).thingToDo());
+
+        testEngine.store("this is a top3 todo0, 3/23, TOP3");
+        List<Todo> top = testEngine.retrieveTopPriorityList();
+        Assert.assertEquals(2, top.size());
+        Assert.assertEquals("this is a top3 todo0", top.get(0).thingToDo());
+        Assert.assertEquals("this is a high priority todo0", top.get(1).thingToDo());
+    }
+
+    @Test
     public void test_e2e_storage() throws URISyntaxException, IOException {
         String filename = "/tmp/test_todos_" + System.currentTimeMillis() + ".txt";
         StorageInterface<Todo> diskStorage = new DiskStorageGateway(filename);
@@ -50,7 +68,7 @@ public class TodoEngineTest {
         // test deletion and retrieval
         testEngine.store("this is a todo1");
         testEngine.store("this is a todo2");
-        testEngine.remove(1); // will remove "this is a todo1
+        testEngine.remove(1); // will remove "this is a todo1"
         List<Todo> undone2 = testEngine.retrieveUndoneList();
         Assert.assertEquals(2, undone2.size());
         Assert.assertEquals("this is a todo0", undone2.get(0).thingToDo());
@@ -63,8 +81,8 @@ public class TodoEngineTest {
         TodoEngine testEngine2 = new TodoEngine(diskStorage2);
         List<Todo> undone3 = testEngine2.retrieveUndoneList();
         Assert.assertEquals(2, undone2.size());
-        Assert.assertEquals("this is a todo0", undone2.get(0).thingToDo());
-        Assert.assertEquals("this is a todo2", undone2.get(1).thingToDo());
+        Assert.assertEquals("this is a todo0", undone3.get(0).thingToDo());
+        Assert.assertEquals("this is a todo2", undone3.get(1).thingToDo());
 
     }
 }

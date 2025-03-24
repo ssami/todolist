@@ -13,7 +13,7 @@ public record Todo(String thingToDo, LocalDateTime dueBy, Priority priority) {
     @Override
     public String toString() {
         return this.thingToDo + "," +
-                this.dueBy.getDayOfMonth() + "/" + this.dueBy.getMonthValue() + "," +
+                this.dueBy.getMonthValue() + "/" + this.dueBy.getDayOfMonth() + "," +
                 this.priority.toString();
     }
 }

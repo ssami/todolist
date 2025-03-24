@@ -37,10 +37,12 @@ public class Main {
         // TODO: for some reason, retrieving menu.txt from src/main/resources is not working anymore in the JAR file
 
         return "What do you want to do?\n" +
-                "1. Create a new todo in the format <todo string>, <date due in mm/dd>{optional}, <priority in format HIGH, MEDIUM, LOW>{optional}\n" +
+                "1. Create a new todo in the format <todo string>, <date due in mm/dd>{optional}, " +
+                "<priority in format HIGH, MEDIUM, LOW, TOP3>{optional}\n" +
                 "2. List todos for today\n" +
-                "3. List this menu again\n" +
-                "4. Exit";
+                "3. List the top todos for today\n" +
+                "4. List this menu again\n" +
+                "5. Exit";
     }
 
     public static void runInteractive() throws URISyntaxException, IOException {
@@ -51,7 +53,7 @@ public class Main {
 
         var scanner = new Scanner(System.in);
         var input = "";
-        while (!input.equals("4")) {
+        while (!input.equals("5")) {
             switch (input) {
                 case "1" -> {
                     System.out.println("Enter the todo: ");
@@ -69,11 +71,25 @@ public class Main {
                     };
                     System.out.println(gateway.retrieve(findDueToday));
                 }
+                case "3" -> {
+                    System.out.println("not implemented");
+                }
                 default -> System.out.println(menu);
             }
             input = scanner.nextLine();
         }
         gateway.save();
+    }
+
+    private static void printTodos(List<Todo> todos) {
+        System.out.println("\n\n");
+        System.out.println("*********************************************");
+        System.out.println("\n");
+        for (int i=0; i<todos.size(); i++) {
+            System.out.printf("%d: %s%n", i, todos.get(i).thingToDo());
+        }
+        System.out.println("\n");
+        System.out.println("*********************************************");
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException {
@@ -88,6 +104,9 @@ public class Main {
                 .dest("todo");
         parser.addArgument("--show")
                 .help("Show todos due today")
+                .action(Arguments.storeTrue());
+        parser.addArgument("--top")
+                .help("Show top priority todos")
                 .action(Arguments.storeTrue());
         parser.addArgument("--delete")
                 .help("Delete the index of the todo")
@@ -118,9 +137,11 @@ public class Main {
             else if (results.get("show")) {
                 // TODO: implement for show for specific date
                 List<Todo> dueToday = todoEngine.retrieveUndoneList();
-                for (int i=0; i<dueToday.size(); i++) {
-                    System.out.printf("%d: %s%n", i, dueToday.get(i).thingToDo());
-                }
+                printTodos(dueToday);
+            }
+            else if (results.get("top")) {
+                List<Todo> topTodos = todoEngine.retrieveTopPriorityList();
+                printTodos(topTodos);
             }
             else if (null != results.get("delete")) {
                 int toDel = Integer.parseInt(results.get("delete"));

@@ -23,6 +23,11 @@ Similarly, to show incomplete todos:
 java -jar TodoList-1.0-SNAPSHOT.jar --loc "/Users/sumitasami/todos.txt" --show
 ```
 
+High priority incomplete todos:
+```shell
+java -jar TodoList-1.0-SNAPSHOT.jar --loc "/Users/sumitasami/todos.txt" --top
+```
+
 And delete: 
 
 ```shell

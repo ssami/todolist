@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.models.Priority;
 import org.example.models.Todo;
 import org.example.storage.StorageInterface;
 import org.example.utils.Conversion;
@@ -7,6 +8,7 @@ import org.example.utils.Conversion;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -38,6 +40,7 @@ public class TodoEngine {
         // TODO: allow seeing "completed" items by including that as a field in Todo
         return this.todoStorageGateway.retrieve(t -> true);
     }
+
     public List<Todo> retrieveTodayList() {
         LocalDateTime today = LocalDateTime.now();
         Predicate<Todo> findDueToday = t -> {
@@ -47,6 +50,19 @@ public class TodoEngine {
         };
         return this.todoStorageGateway.retrieve(findDueToday);
     }
+
+    public List<Todo> retrieveTopPriorityList() {
+        Predicate<Todo> findTop3Priority = t -> t.priority().equals(Priority.TOP3);
+        Predicate<Todo> findHighPriority = t -> t.priority().equals(Priority.HIGH);
+        List<Todo> top3 = this.todoStorageGateway.retrieve(findTop3Priority);
+        List<Todo> high = this.todoStorageGateway.retrieve(findHighPriority);
+
+        List<Todo> topPriorityList = new ArrayList<>(top3);
+        topPriorityList.addAll(high);
+
+        return topPriorityList;
+    };
+
 
     public void remove(int index) {
         this.todoStorageGateway.remove(index);
