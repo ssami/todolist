@@ -5,11 +5,12 @@ import org.example.models.Todo;
 import org.example.storage.DiskStorageGateway;
 import org.example.storage.LocalStorageGateway;
 import org.example.storage.StorageInterface;
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
+import org.mockito.Mockito;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class TodoEngineTest {
@@ -22,17 +23,17 @@ public class TodoEngineTest {
         // test storage and retrieval
         testEngine.store("this is a todo0");
         List<Todo> undone = testEngine.retrieveUndoneList();
-        Assert.assertEquals(1, undone.size());
-        Assert.assertEquals("this is a todo0", undone.get(0).thingToDo());
+        Assertions.assertEquals(1, undone.size());
+        Assertions.assertEquals("this is a todo0", undone.get(0).thingToDo());
 
         // test deletion and retrieval
         testEngine.store("this is a todo1");
         testEngine.store("this is a todo2");
         testEngine.remove(1); // will remove "this is a todo1
         List<Todo> undone2 = testEngine.retrieveUndoneList();
-        Assert.assertEquals(2, undone2.size());
-        Assert.assertEquals("this is a todo0", undone2.get(0).thingToDo());
-        Assert.assertEquals("this is a todo2", undone2.get(1).thingToDo());
+        Assertions.assertEquals(2, undone2.size());
+        Assertions.assertEquals("this is a todo0", undone2.get(0).thingToDo());
+        Assertions.assertEquals("this is a todo2", undone2.get(1).thingToDo());
     }
 
     @Test
@@ -43,14 +44,14 @@ public class TodoEngineTest {
         // test storage and retrieval
         testEngine.store("this is a high priority todo0, 3/23, HIGH");
         List<Todo> high = testEngine.retrieveTopPriorityList();
-        Assert.assertEquals(1, high.size());
-        Assert.assertEquals("this is a high priority todo0", high.get(0).thingToDo());
+        Assertions.assertEquals(1, high.size());
+        Assertions.assertEquals("this is a high priority todo0", high.get(0).thingToDo());
 
         testEngine.store("this is a top3 todo0, 3/23, TOP3");
         List<Todo> top = testEngine.retrieveTopPriorityList();
-        Assert.assertEquals(2, top.size());
-        Assert.assertEquals("this is a top3 todo0", top.get(0).thingToDo());
-        Assert.assertEquals("this is a high priority todo0", top.get(1).thingToDo());
+        Assertions.assertEquals(2, top.size());
+        Assertions.assertEquals("this is a top3 todo0", top.get(0).thingToDo());
+        Assertions.assertEquals("this is a high priority todo0", top.get(1).thingToDo());
     }
 
     @Test
@@ -62,17 +63,17 @@ public class TodoEngineTest {
         // test storage and retrieval
         testEngine.store("this is a todo0");
         List<Todo> undone = testEngine.retrieveUndoneList();
-        Assert.assertEquals(1, undone.size());
-        Assert.assertEquals("this is a todo0", undone.get(0).thingToDo());
+        Assertions.assertEquals(1, undone.size());
+        Assertions.assertEquals("this is a todo0", undone.get(0).thingToDo());
 
         // test deletion and retrieval
         testEngine.store("this is a todo1");
         testEngine.store("this is a todo2");
         testEngine.remove(1); // will remove "this is a todo1"
         List<Todo> undone2 = testEngine.retrieveUndoneList();
-        Assert.assertEquals(2, undone2.size());
-        Assert.assertEquals("this is a todo0", undone2.get(0).thingToDo());
-        Assert.assertEquals("this is a todo2", undone2.get(1).thingToDo());
+        Assertions.assertEquals(2, undone2.size());
+        Assertions.assertEquals("this is a todo0", undone2.get(0).thingToDo());
+        Assertions.assertEquals("this is a todo2", undone2.get(1).thingToDo());
 
         testEngine.save();
 
@@ -80,9 +81,9 @@ public class TodoEngineTest {
         StorageInterface<Todo> diskStorage2 = new DiskStorageGateway(filename);
         TodoEngine testEngine2 = new TodoEngine(diskStorage2);
         List<Todo> undone3 = testEngine2.retrieveUndoneList();
-        Assert.assertEquals(2, undone2.size());
-        Assert.assertEquals("this is a todo0", undone3.get(0).thingToDo());
-        Assert.assertEquals("this is a todo2", undone3.get(1).thingToDo());
+        Assertions.assertEquals(2, undone2.size());
+        Assertions.assertEquals("this is a todo0", undone3.get(0).thingToDo());
+        Assertions.assertEquals("this is a todo2", undone3.get(1).thingToDo());
 
     }
 }

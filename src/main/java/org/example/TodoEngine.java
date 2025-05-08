@@ -75,4 +75,42 @@ public class TodoEngine {
     public void save() throws URISyntaxException, IOException {
         this.todoStorageGateway.save();
     }
+
+    public void completeTodo(int index) {
+        List<Todo> todos = this.todoStorageGateway.retrieve(t -> true);
+        if (index < 0 || index >= todos.size()) {
+            throw new IllegalArgumentException("Invalid todo index");
+        }
+        
+        Todo todo = todos.get(index);
+        // Create a completed copy while preserving the original todo's content
+        Todo completedTodo = todo.copyWith(
+            todo.thingToDo(),  // Preserve the original task
+            todo.dueBy(),      // Preserve the original due date
+            todo.priority(),   // Preserve the original priority
+            true,             // Mark as completed
+            LocalDateTime.now() // Set completion time
+        );
+        
+        this.todoStorageGateway.remove(index);
+        this.todoStorageGateway.store(completedTodo);
+    }
+
+    public List<Todo> retrieveCompletedYesterday() {
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+        Predicate<Todo> findCompletedYesterday = t -> {
+            if (!t.isCompleted() || t.completedAt() == null) {
+                return false;
+            }
+            LocalDateTime completedAt = t.completedAt();
+            return completedAt.getYear() == yesterday.getYear() &&
+                   completedAt.getMonth() == yesterday.getMonth() &&
+                   completedAt.getDayOfMonth() == yesterday.getDayOfMonth();
+        };
+        return this.todoStorageGateway.retrieve(findCompletedYesterday);
+    }
+
+    public List<Todo> retrieveCompletedList() {
+        return this.todoStorageGateway.retrieve(Todo::isCompleted);
+    }
 }

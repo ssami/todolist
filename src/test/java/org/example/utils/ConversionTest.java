@@ -2,44 +2,48 @@ package org.example.utils;
 
 import org.example.models.Priority;
 import org.example.models.Todo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import java.time.DateTimeException;
 
 public class ConversionTest {
 
     @Test
-    public void test_validDayMonth() {
-        LocalDateTime convertedDate = Conversion.parseDate("12/1");
-        assertEquals(Month.DECEMBER, convertedDate.getMonth());
-        assertEquals(1, convertedDate.getDayOfMonth());
+    public void testParseDate() {
+        LocalDateTime date = Conversion.parseDate("3/23");
+        Assertions.assertEquals(Month.MARCH, date.getMonth());
+        Assertions.assertEquals(23, date.getDayOfMonth());
     }
 
     @Test
-    public void test_invalidPattern() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> Conversion.parseDate("1-1")
-        );
+    public void testParseDateInvalid() {
+        Assertions.assertThrows(DateTimeException.class, () -> {
+            Conversion.parseDate("13/23");
+        });
     }
 
     @Test
-    public void test_invalidDayMonth() {
-        assertThrows(
-                RuntimeException.class,
-                () -> Conversion.parseDate("13/25")
-        );
+    public void testParseDateInvalidFormat() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Conversion.parseDate("3-23");
+        });
     }
 
     @Test
-    public void test_validTdodoSplitWithoutComma() {
+    public void testParseString() {
+        String todoString = "this is a todo, 3/23, HIGH";
+        Todo todo = Conversion.parseString(todoString);
+        Assertions.assertEquals(new Todo("this is a todo", LocalDateTime.of(2023, 3, 23, 0, 0), Priority.HIGH), todo);
+    }
+
+    @Test
+    public void testValidTodoSplitWithoutComma() {
         var expected = new Todo("test",
                 LocalDateTime.of(2023, Month.of(3), 3, 0, 0),
                 Priority.HIGH);
-        assertEquals(expected, Conversion.parseString("test, 3/3, HIGH"));
+        Assertions.assertEquals(expected, Conversion.parseString("test, 3/3, HIGH"));
     }
 }

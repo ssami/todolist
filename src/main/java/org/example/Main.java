@@ -86,7 +86,7 @@ public class Main {
         System.out.println("*********************************************");
         System.out.println("\n");
         for (int i=0; i<todos.size(); i++) {
-            System.out.printf("%d: %s%n", i, todos.get(i).thingToDo());
+            System.out.printf("%d: %s, %s%n", i, todos.get(i).thingToDo(), todos.get(i).priority());
         }
         System.out.println("\n");
         System.out.println("*********************************************");
@@ -114,6 +114,9 @@ public class Main {
         parser.addArgument("--loc")
                 .help("Location for storing the todos")
                 .dest("loc");
+        parser.addArgument("--tag")
+                .help("Add a priority tag for the todo, referred to as an index. E.g. --tag 0 TOP3")
+                .dest("tag");
 
         TodoEngine todoEngine = new TodoEngine();
         String defaultLocation = "/tmp/todos.txt";
@@ -127,19 +130,19 @@ public class Main {
                 StorageInterface<Todo> diskStorage = new DiskStorageGateway(location);
                 todoEngine.setTodoStorageGateway(diskStorage);
             }
-            if (results.get("int")) {
+            if (results.getBoolean("int")) {
                 Main.runInteractive();
             }
             else if (null != results.get("todo")) {
                 String rawTodo = results.get("todo");
                 todoEngine.store(rawTodo);
             }
-            else if (results.get("show")) {
+            else if (results.getBoolean("show")) {
                 // TODO: implement for show for specific date
                 List<Todo> dueToday = todoEngine.retrieveUndoneList();
                 printTodos(dueToday);
             }
-            else if (results.get("top")) {
+            else if (results.getBoolean("top")) {
                 List<Todo> topTodos = todoEngine.retrieveTopPriorityList();
                 printTodos(topTodos);
             }

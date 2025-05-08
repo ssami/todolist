@@ -59,6 +59,14 @@ public class DiskStorageGateway implements StorageInterface<Todo> {
     }
 
     @Override
+    public Todo retrieveByIndex(int index) {
+        if (this.loadedToDoList.size() < index - 1 || index < 0) {
+            throw new IllegalArgumentException("Index requested is out of bounds");
+        }
+        return this.loadedToDoList.get(index);
+    }
+
+    @Override
     public void save() throws URISyntaxException, IOException {
         Path desiredFile = Paths.get(originalFile);
         StringBuffer buffer = new StringBuffer();

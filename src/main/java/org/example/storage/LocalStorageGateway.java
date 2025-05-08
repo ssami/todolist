@@ -32,6 +32,14 @@ public class LocalStorageGateway implements StorageInterface<Todo> {
     }
 
     @Override
+    public Todo retrieveByIndex(int index) {
+        if (this.localTodoCache.size() < index - 1 || index < 0) {
+            throw new IllegalArgumentException("Index requested is out of bounds");
+        }
+        return this.localTodoCache.get(index);
+    }
+
+    @Override
     public void remove(int index) {
         localTodoCache.remove(index);
     }

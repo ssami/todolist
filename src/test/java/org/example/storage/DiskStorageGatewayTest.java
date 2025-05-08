@@ -2,8 +2,8 @@ package org.example.storage;
 
 import org.example.models.Priority;
 import org.example.models.Todo;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,7 +22,7 @@ public class DiskStorageGatewayTest {
         Path storePath = Path.of(filePath);
 
         // Validate
-        Assert.assertTrue(Files.exists(storePath));
+        Assertions.assertTrue(Files.exists(storePath));
 
         // Clean up
         Files.delete(storePath);
@@ -38,10 +38,10 @@ public class DiskStorageGatewayTest {
 
         // Validate
         Path storePath = Path.of(filePath);
-        Assert.assertTrue(Files.exists(storePath));
+        Assertions.assertTrue(Files.exists(storePath));
         List<String> contents = Files.readAllLines(storePath);
-        Assert.assertEquals(1, contents.size());
-        Assert.assertTrue(contents.get(0).contains("test this method"));
+        Assertions.assertEquals(1, contents.size());
+        Assertions.assertTrue(contents.get(0).contains("test this method"));
     }
 
 
