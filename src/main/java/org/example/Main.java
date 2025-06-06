@@ -108,6 +108,12 @@ public class Main {
         parser.addArgument("--top")
                 .help("Show top priority todos")
                 .action(Arguments.storeTrue());
+        parser.addArgument("--completed")
+                .help("Show completed todos")
+                .action(Arguments.storeTrue());
+        parser.addArgument("--completed-yesterday")
+                .help("Show todos completed yesterday")
+                .action(Arguments.storeTrue());
         parser.addArgument("--delete")
                 .help("Delete the index of the todo")
                 .dest("delete");
@@ -146,6 +152,14 @@ public class Main {
                 List<Todo> topTodos = todoEngine.retrieveTopPriorityList();
                 printTodos(topTodos);
             }
+            else if (results.getBoolean("completed")) {
+                List<Todo> completedTodos = todoEngine.retrieveCompletedList();
+                printTodos(completedTodos);
+            }
+            else if (results.getBoolean("completed-yesterday")) {
+                List<Todo> completedYesterday = todoEngine.retrieveCompletedYesterday();
+                printTodos(completedYesterday);
+            }
             else if (null != results.get("delete")) {
                 int toDel = Integer.parseInt(results.get("delete"));
                 todoEngine.remove(toDel);
@@ -153,7 +167,10 @@ public class Main {
                 printTodos(remaining);
             }
         } catch (ArgumentParserException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error parsing arguments: " + e.getMessage());
+            System.err.println("Usage: java -jar your-jar-file.jar [options]");
+            parser.printHelp();
+            throw new RuntimeException("Argument parsing failed", e);
         } finally {
             todoEngine.save();  // writes out to disk
         }
